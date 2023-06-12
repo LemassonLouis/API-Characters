@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 
@@ -12,7 +12,7 @@ export class AuthService {
     async singIn(username :string, pass :string) :Promise<any> {
         const user = await this.usersService.findOneByUsername(username);
         if(user?.password !== pass) {
-            throw "Unknow user";
+            throw new UnauthorizedException();
         }
         const payload = { sub: user.id, username: user.username };
         return {
